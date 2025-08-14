@@ -1,41 +1,46 @@
 package controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-/**
- * Servlet implementation class InsertServlet
- */
-@WebServlet("/insert")
+import model.HelloDAO;
+
+@WebServlet("/insertRental")
 public class InsertServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public InsertServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
+        String rentalNo = request.getParameter("rental_no");
+        String custNo = request.getParameter("cust_no");
+        String rentalDateStr = request.getParameter("rental_date");
+        String equipCode = request.getParameter("equip_code");
+        String returnDueStr = request.getParameter("return_due");
+
+        try {
+            // 문자열을 날짜로 파싱
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date rentalDate = sdf.parse(rentalDateStr);
+            Date returnDue = sdf.parse(returnDueStr);
+
+            // DAO 호출
+            HelloDAO dao = new HelloDAO();
+            dao.insertRental(rentalNo, custNo, new java.sql.Date(rentalDate.getTime()), equipCode, new java.sql.Date(returnDue.getTime()));
+
+            // 등록 후 페이지 이동
+            response.sendRedirect("success.jsp"); // 등록 성공 시
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp");
+        }
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }

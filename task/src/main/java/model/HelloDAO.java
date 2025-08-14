@@ -3,8 +3,6 @@ package model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 import util.DBUtil;
 
@@ -13,36 +11,21 @@ public class HelloDAO {
     PreparedStatement pstmt;
     ResultSet rs;
 
-    public void insertName(String name) {
+    public void insertRental(String rentalNo, String custNo, java.sql.Date rentalDate, String equipCode, java.sql.Date returnDue) {
         try {
             conn = DBUtil.getConnection();
-            String sql = "INSERT INTO hello(name) VALUES(?)";
+            String sql = "INSERT INTO rental (rental_no, cust_no, rental_date, equip_code, return_due) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, name);
+            pstmt.setString(1, rentalNo);
+            pstmt.setString(2, custNo);
+            pstmt.setDate(3, rentalDate);
+            pstmt.setString(4, equipCode);
+            pstmt.setDate(5, returnDue);
             pstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             DBUtil.close(conn, pstmt, rs);
         }
-    }
-
-    public List<String> getAll() {
-        List<String> list = new ArrayList<>();
-        try {
-            conn = DBUtil.getConnection();
-            String sql = "SELECT * FROM hello";
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while(rs.next()) {
-                String name = rs.getString("name");
-                list.add(name);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            DBUtil.close(conn, pstmt, rs);
-        }
-        return list;
     }
 }
