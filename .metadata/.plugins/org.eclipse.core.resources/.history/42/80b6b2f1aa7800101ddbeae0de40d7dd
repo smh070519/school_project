@@ -1,0 +1,25 @@
+// 예약 전체 조회
+public List<RentalDTO> getAllReservations() {
+    List<RentalDTO> list = new ArrayList<>();
+    try {
+        conn = DBUtil.getConnection();
+        String sql = "SELECT resv_no AS rental_no, cust_no, resv_date AS rental_date, court_no AS equip_code, NULL AS return_due FROM reservation ORDER BY resv_date DESC";
+        pstmt = conn.prepareStatement(sql);
+        rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            RentalDTO dto = new RentalDTO();
+            dto.setRentalNo(rs.getString("rental_no"));
+            dto.setCustNo(rs.getString("cust_no"));
+            dto.setRentalDate(rs.getDate("rental_date"));  // resv_date 컬럼이 DATE 형이라면
+            dto.setEquipCode(rs.getString("equip_code"));
+            dto.setReturnDue(null);  // 예약엔 반납일 없으면 null 처리
+            list.add(dto);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        DBUtil.close(conn, pstmt, rs);
+    }
+    return list;
+}

@@ -1,0 +1,68 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import DTO.RentalDTO;
+import util.DBUtil;
+
+public class HelloDAO {
+    Connection conn;
+    PreparedStatement pstmt;
+    ResultSet rs;
+
+    // INSERT 예시
+    public void insertRental(String rentalNo, String custNo,String rentalDate, String equipCode,String returnDue) {
+        try {
+            conn = DBUtil.getConnection();
+            String sql = "INSERT INTO rental (rental_no, cust_no, rental_date, equip_code, return_due) VALUES (?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, rentalNo);
+            pstmt.setString(2, custNo);
+            pstmt.setString(3, rentalDate);
+            pstmt.setString(4, equipCode);
+            pstmt.setString(5, returnDue);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn, pstmt, rs);
+        }
+    }
+
+    // SELECT - 전체 대여 목록 조회
+    public List<RentalDTO> getAllRentals() {
+        List<RentalDTO> list = new ArrayList<>();
+        try {
+            conn = DBUtil.getConnection();
+            String sql = "SELECT * FROM rental";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String rentalNo = rs.getString("rental_no");
+                String custNo = rs.getString("cust_no");
+                Date rentalDate = rs.getDate("rental_date");
+                String equipCode = rs.getString("equip_code");
+                Date returnDue = rs.getDate("return_due");
+
+                // RentalDTO에 생성자가 있다면 이렇게 사용
+                RentalDTO dto = new RentalDTO(rentalNo, custNo, rentalDate, equipCode, returnDue);
+                System.out.print(rentalNo);
+
+                list.add(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn, pstmt, rs);
+        }
+        return list;
+    }
+
+
+}

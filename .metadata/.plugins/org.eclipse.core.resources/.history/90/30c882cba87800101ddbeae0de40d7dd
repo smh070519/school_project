@@ -1,0 +1,25 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+import model.HelloDAO;
+
+
+@WebServlet("/rentalList")
+public class ListServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HelloDAO dao = new HelloDAO();
+		List<HelloDAO> list = dao.getAllRentals();
+
+		request.setAttribute("list", list);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("rentalList.jsp");
+		dispatcher.forward(request, response);
+	}
+}

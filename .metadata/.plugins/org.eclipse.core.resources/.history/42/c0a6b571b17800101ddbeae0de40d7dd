@@ -1,0 +1,7 @@
+/**
+ * 
+ */
+
+const checkRental = () =>{
+	frm.submit();
+}

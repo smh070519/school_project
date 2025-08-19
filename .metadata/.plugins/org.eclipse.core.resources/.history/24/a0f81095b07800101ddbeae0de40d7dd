@@ -1,0 +1,32 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+import model.HelloDAO;
+import DTO.RentalDTO;
+
+@WebServlet("/rentalList")
+public class ListServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // DAO 객체 생성
+        HelloDAO dao = new HelloDAO();
+
+        // 대여 목록 가져오기
+        List<RentalDTO> list = dao.getAllRentals();
+
+        // JSP에 데이터 전달
+        request.setAttribute("select", list);
+
+        // select.jsp로 포워드 (redirect X)
+        request.getRequestDispatcher("select.jsp").forward(request, response);
+   
+    }
+}

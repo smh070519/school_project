@@ -34,7 +34,7 @@
 
     <section>
         <h2> 장비 대여 등록 </h2>
-        <form name="frm" method="post" action="equipmentInsert">
+        <form name="frm" method="post" action="insert">
             <table border="1">
                 <tr>
                     <td>대여번호</td>
@@ -72,6 +72,6 @@
     </section>
 
     <jsp:include page="footer.jsp"></jsp:include>
-    <script type="text/javascript" src="equipmentScript.js"></script>
+    <script type="text/javascript" src="check.js"></script>
 </body>
 </html>

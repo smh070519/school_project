@@ -1,41 +1,32 @@
 package controller;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
+import java.util.List;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-/**
- * Servlet implementation class ListServlet
- */
+import model.HelloDAO;
+import DTO.RentalDTO;
+
 @WebServlet("/list")
 public class ListServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ListServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // DAO 객체 생성
+        HelloDAO dao = new HelloDAO();
+
+        // 대여 목록 가져오기
+        List<RentalDTO> list = dao.getAllRentals();
+
+        // JSP에 데이터 전달
+        request.setAttribute("list", list);
+
+        // select.jsp로 포워드 (redirect X)
+        request.getRequestDispatcher("select.jsp").forward(request, response);
+   
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }

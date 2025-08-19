@@ -1,0 +1,7 @@
+/**
+ * 
+ */
+
+checkRental = () =>{
+	frm.submit();
+}

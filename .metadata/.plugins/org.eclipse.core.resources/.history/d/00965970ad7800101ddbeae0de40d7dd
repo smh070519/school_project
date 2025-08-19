@@ -1,0 +1,33 @@
+public List<RentalDTO> getAllRentals() {
+    List<RentalDTO> list = new ArrayList<>();
+    try {
+        conn = DBUtil.getConnection();
+        String sql = """
+            SELECT 
+                rental_no,
+                cust_no,
+                rental_date,
+                equip_code,
+                return_due
+            FROM rental
+            ORDER BY rental_date DESC
+            """;
+        pstmt = conn.prepareStatement(sql);
+        rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            RentalDTO dto = new RentalDTO();
+            dto.setRentalNo(rs.getString("rental_no"));
+            dto.setCustNo(rs.getString("cust_no"));
+            dto.setRentalDate(rs.getDate("rental_date"));
+            dto.setEquipCode(rs.getString("equip_code"));
+            dto.setReturnDue(rs.getDate("return_due"));
+            list.add(dto);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        DBUtil.close(conn, pstmt, rs);
+    }
+    return list;
+}

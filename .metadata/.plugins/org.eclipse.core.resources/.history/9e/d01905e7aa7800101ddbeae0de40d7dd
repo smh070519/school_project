@@ -1,0 +1,46 @@
+import DTO.ResvDTO;
+import java.util.List;
+import java.util.ArrayList;
+
+// 예약 전체 조회 메서드 추가
+public List<ResvDTO> getAllReservations() {
+    List<ResvDTO> list = new ArrayList<>();
+    try {
+        conn = DBUtil.getConnection();
+        String sql = "SELECT resv_no, cust_no, resv_date, court_no FROM reservation ORDER BY resv_date DESC";
+        pstmt = conn.prepareStatement(sql);
+        rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            ResvDTO dto = new ResvDTO();
+            dto.setResvNo(rs.getString("resv_no"));
+            dto.setCustNo(rs.getString("cust_no"));
+            dto.setResvDate(rs.getString("resv_date"));  // ResvDTO는 String 타입임
+            dto.setCourtNo(rs.getString("court_no"));
+            list.add(dto);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        DBUtil.close(conn, pstmt, rs);
+    }
+    return list;
+}
+
+// 예약 추가 메서드도 필요하면 만들기
+public void insertReservation(String resvNo, String custNo, String resvDate, String courtNo) {
+    try {
+        conn = DBUtil.getConnection();
+        String sql = "INSERT INTO reservation (resv_no, cust_no, resv_date, court_no) VALUES (?, ?, ?, ?)";
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, resvNo);
+        pstmt.setString(2, custNo);
+        pstmt.setString(3, resvDate);
+        pstmt.setString(4, courtNo);
+        pstmt.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        DBUtil.close(conn, pstmt, rs);
+    }
+}

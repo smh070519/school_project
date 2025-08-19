@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 
 import model.HelloDAO;
 
-@WebServlet("/insertRental")
+@WebServlet("/insert")
 public class InsertServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -25,19 +25,15 @@ public class InsertServlet extends HttpServlet {
         String equipCode = request.getParameter("equip_code");
         String returnDueStr = request.getParameter("return_due");
 
+        System.out.println("111:"+rentalNo);
+        System.out.println("111:"+custNo);
+        System.out.println("111:"+rentalDateStr);
+        System.out.println("111:"+equipCode);
+        System.out.println("111:"+returnDueStr);
         try {
-            // 문자열을 날짜로 파싱
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date rentalDate = sdf.parse(rentalDateStr);
-            Date returnDue = sdf.parse(returnDueStr);
-
-            // DAO 호출
             HelloDAO dao = new HelloDAO();
-            dao.insertRental(rentalNo, custNo, new java.sql.Date(rentalDate.getTime()), equipCode, new java.sql.Date(returnDue.getTime()));
-
-            // 등록 후 페이지 이동
-            response.sendRedirect("success.jsp"); // 등록 성공 시
-
+            dao.insertRental(rentalNo, custNo, rentalDateStr, equipCode, returnDueStr);
+            response.sendRedirect("list");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
